@@ -1,6 +1,7 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Login from "./Components/Login.js";
 import Home from "./Components/Home.js";
+import Product from "./Components/Product.js";
 import "./App.css";
 import store from "./Utils/store.js";
 import { Provider } from "react-redux";
@@ -14,6 +15,10 @@ const App = () => {
     {
       path: "/home",
       element: <Home />,
+    },
+    {
+      path: "/products/:id",
+      element: <Product />,
     },
   ]);
   return (

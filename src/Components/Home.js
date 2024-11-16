@@ -7,10 +7,8 @@ import SearchBar from "./SearchBar";
 const Home = () => {
   const token = localStorage.getItem("token");
 
-  // Fetch initial home content
   useFetcHomePage(token);
 
-  // Manage search results
   const [searchData, setSearchData] = useState(null);
 
   return token ? (
