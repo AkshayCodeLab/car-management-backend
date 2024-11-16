@@ -102,80 +102,88 @@ const AddProductForm = ({ token, onClose }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-      <div className="bg-white p-6 rounded-lg shadow-lg w-1/3">
-        <h2 className="text-2xl font-semibold mb-4">Add New Product</h2>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium">Title</label>
-            <input
-              type="text"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              className="border w-full px-3 py-2 rounded"
-              required
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium">Description</label>
-            <textarea
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              className="border w-full px-3 py-2 rounded"
-              required
-            ></textarea>
-          </div>
-          <div>
-            <label className="block text-sm font-medium">
-              Tags (comma-separated)
-            </label>
-            <input
-              type="text"
-              value={tags}
-              onChange={(e) => setTags(e.target.value)}
-              className="border w-full px-3 py-2 rounded"
-              required
-            />
-          </div>
-          <div className="space-y-2">
-            <label className="block text-sm font-medium">Upload Images</label>
-            <button
-              type="button"
-              onClick={openCloudinaryWidget}
-              className="w-full px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:bg-blue-300"
-              disabled={imgUrls.length >= 10}
-            >
-              {imgUrls.length >= 10
-                ? "Maximum Images Reached"
-                : "Choose Images"}
-            </button>
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center overflow-hidden">
+      <div className="bg-white rounded-lg shadow-lg w-1/3 flex flex-col max-h-[90vh]">
+        <div className="p-6">
+          <h2 className="text-2xl font-semibold mb-4">Add New Product</h2>
+        </div>
 
-            {imgUrls.length > 0 && (
-              <div className="grid grid-cols-2 gap-2 mt-2">
-                {imgUrls.map((url, index) => (
-                  <div key={index} className="relative">
-                    <img
-                      src={url}
-                      alt={`Uploaded ${index + 1}`}
-                      className="w-full h-32 object-cover rounded"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => handleRemoveImage(index)}
-                      className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 w-6 h-6 flex items-center justify-center"
-                    >
-                      ×
-                    </button>
-                  </div>
-                ))}
-              </div>
-            )}
-            {imgUrls.length > 0 && (
-              <p className="text-sm text-gray-500 mt-1">
-                {imgUrls.length}/10 images selected
-              </p>
-            )}
-          </div>
+        <div className="flex-1 overflow-y-auto px-6">
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium">Title</label>
+              <input
+                type="text"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                className="border w-full px-3 py-2 rounded"
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium">Description</label>
+              <textarea
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                className="border w-full px-3 py-2 rounded"
+                required
+              ></textarea>
+            </div>
+            <div>
+              <label className="block text-sm font-medium">
+                Tags (comma-separated)
+              </label>
+              <input
+                type="text"
+                value={tags}
+                onChange={(e) => setTags(e.target.value)}
+                className="border w-full px-3 py-2 rounded"
+                required
+              />
+            </div>
+            <div className="space-y-2">
+              <label className="block text-sm font-medium">Upload Images</label>
+              <button
+                type="button"
+                onClick={openCloudinaryWidget}
+                className="w-full px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:bg-blue-300"
+                disabled={imgUrls.length >= 10}
+              >
+                {imgUrls.length >= 10
+                  ? "Maximum Images Reached"
+                  : "Choose Images"}
+              </button>
+
+              {imgUrls.length > 0 && (
+                <div className="grid grid-cols-2 gap-2 mt-2">
+                  {imgUrls.map((url, index) => (
+                    <div key={index} className="relative">
+                      <img
+                        src={url}
+                        alt={`Uploaded ${index + 1}`}
+                        className="w-full h-32 object-cover rounded"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => handleRemoveImage(index)}
+                        className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 w-6 h-6 flex items-center justify-center"
+                      >
+                        ×
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+              {imgUrls.length > 0 && (
+                <p className="text-sm text-gray-500 mt-1">
+                  {imgUrls.length}/10 images selected
+                </p>
+              )}
+            </div>
+          </form>
+        </div>
+
+        <div className="p-6 border-t">
           <div className="flex justify-end space-x-4">
             <button
               type="button"
@@ -186,6 +194,7 @@ const AddProductForm = ({ token, onClose }) => {
             </button>
             <button
               type="submit"
+              form="product-form"
               className="bg-blue-600 text-white px-4 py-2 rounded"
             >
               {loading ? (
@@ -195,7 +204,7 @@ const AddProductForm = ({ token, onClose }) => {
               )}
             </button>
           </div>
-        </form>
+        </div>
       </div>
     </div>
   );

@@ -13,7 +13,6 @@ const Body = ({ searchData }) => {
 
   return (
     <div className="relative">
-      {/* Add Product Button */}
       <div className="flex justify-end p-4 w-full">
         <button
           onClick={() => setShowForm(!showForm)}
@@ -23,19 +22,16 @@ const Body = ({ searchData }) => {
         </button>
       </div>
 
-      {/* Show Form or Products */}
       {showForm ? (
-        // Show Add Product Form
         <AddProductForm token={token} onClose={() => setShowForm(false)} />
-      ) : // Show Product List
-      dataToDisplay?.length ? (
+      ) : dataToDisplay?.length ? (
         <div className="absolute flex flex-wrap gap-4 p-4">
           {dataToDisplay.map((product) => (
             <CarCard key={product._id} product={product} />
           ))}
         </div>
       ) : (
-        <div>Loading...</div>
+        <div>No Products to display...</div>
       )}
     </div>
   );
