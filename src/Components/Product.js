@@ -13,7 +13,7 @@ const Product = () => {
     title: "",
     description: "",
     tags: "",
-    imgUrl: "",
+    imgUrl: [],
   });
 
   useEffect(() => {
@@ -71,6 +71,7 @@ const Product = () => {
         `${process.env.REACT_APP_BACKEND_URL}/products/update/${id}`,
         {
           ...formData,
+          imgUrl: formData.imgUrl.split(","),
           tags: formData.tags.split(","),
         },
         {
