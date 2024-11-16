@@ -13,6 +13,11 @@ const AddProductForm = ({ token, onClose }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  const handleRemoveImage = (indexToRemove) => {
+    setImgUrls((prevUrls) =>
+      prevUrls.filter((_, index) => index !== indexToRemove)
+    );
+  };
   // Function to initialize and open the Cloudinary Upload Widget
   const openCloudinaryWidget = () => {
     if (imgUrls.length >= 10) {
@@ -132,27 +137,43 @@ const AddProductForm = ({ token, onClose }) => {
               required
             />
           </div>
-          <div>
+          <div className="space-y-2">
             <label className="block text-sm font-medium">Upload Images</label>
             <button
               type="button"
               onClick={openCloudinaryWidget}
-              className="border w-full px-3 py-2 rounded"
+              className="w-full px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:bg-blue-300"
               disabled={imgUrls.length >= 10}
             >
-              Choose Images
+              {imgUrls.length >= 10
+                ? "Maximum Images Reached"
+                : "Choose Images"}
             </button>
+
             {imgUrls.length > 0 && (
-              <div className="mt-2">
+              <div className="grid grid-cols-2 gap-2 mt-2">
                 {imgUrls.map((url, index) => (
-                  <img
-                    key={index}
-                    src={url}
-                    alt={`Uploaded ${index + 1}`}
-                    className="w-32 h-32 object-cover mr-2"
-                  />
+                  <div key={index} className="relative">
+                    <img
+                      src={url}
+                      alt={`Uploaded ${index + 1}`}
+                      className="w-full h-32 object-cover rounded"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveImage(index)}
+                      className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 w-6 h-6 flex items-center justify-center"
+                    >
+                      ×
+                    </button>
+                  </div>
                 ))}
               </div>
+            )}
+            {imgUrls.length > 0 && (
+              <p className="text-sm text-gray-500 mt-1">
+                {imgUrls.length}/10 images selected
+              </p>
             )}
           </div>
           <div className="flex justify-end space-x-4">
@@ -168,7 +189,7 @@ const AddProductForm = ({ token, onClose }) => {
               className="bg-blue-600 text-white px-4 py-2 rounded"
             >
               {loading ? (
-                <div className="w-6 h-6 border-4 border-t-4 border-blue-600 rounded-full animate-spin"></div> // Spinner when loading
+                <div className="w-6 h-6 border-4 border-t-4 border-blue-600 rounded-full animate-spin"></div>
               ) : (
                 "Add Product"
               )}
