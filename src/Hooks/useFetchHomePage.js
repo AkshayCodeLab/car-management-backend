@@ -21,7 +21,7 @@ const useFetcHomePage = (token) => {
           },
         }
       );
-      console.log(response.data?.products);
+      // console.log(response.data?.products);
       dispatch(setHomeContent(response.data));
     } catch (error) {
       console.log("This is the error : " + error);
