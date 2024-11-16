@@ -42,7 +42,7 @@ const AddProductForm = ({ token, onClose }) => {
               return newImgUrls;
             } else {
               alert("You can only upload up to 10 images.");
-              return prevUrls; // Return the previous list if limit exceeded
+              return prevUrls;
             }
           });
         }
@@ -55,17 +55,16 @@ const AddProductForm = ({ token, onClose }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    setLoading(true); // Set loading to true when the submit starts
+    setLoading(true);
 
     const newProduct = {
       title,
       description,
       tags: tags.split(",").map((tag) => tag.trim()),
-      imgUrl: imgUrls, // Send array of image URLs to backend
+      imgUrl: imgUrls,
     };
 
     try {
-      // Send new product details to the backend
       await axios.post(
         `${process.env.REACT_APP_BACKEND_URL}/products/create`,
         newProduct,
@@ -93,7 +92,7 @@ const AddProductForm = ({ token, onClose }) => {
       navigate("/home");
     } catch (error) {
       console.error("Error adding product:", error);
-      setLoading(false); // Set loading to false in case of error
+      setLoading(false);
     }
   };
 
@@ -139,7 +138,7 @@ const AddProductForm = ({ token, onClose }) => {
               type="button"
               onClick={openCloudinaryWidget}
               className="border w-full px-3 py-2 rounded"
-              disabled={imgUrls.length >= 10} // Disable button when 10 images are uploaded
+              disabled={imgUrls.length >= 10}
             >
               Choose Images
             </button>

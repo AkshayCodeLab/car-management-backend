@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import ImageCarousel from "./ImageCarousel.js"; // Adjust the import path as needed
 import axios from "axios";
 
 const Product = () => {
@@ -104,11 +105,7 @@ const Product = () => {
     <div className="p-4 max-w-md mx-auto bg-white rounded-lg shadow-lg">
       {!isEditing ? (
         <>
-          <img
-            src={product.imgUrl[0]}
-            alt={product.title}
-            className="w-full h-48 object-cover"
-          />
+          <ImageCarousel images={product.imgUrl} />
           <h2 className="text-2xl font-semibold mt-4">{product.title}</h2>
           <p className="mt-2 text-gray-700">{product.description}</p>
           <div className="flex flex-wrap gap-2 mt-4">
