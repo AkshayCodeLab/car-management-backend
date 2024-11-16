@@ -8,21 +8,64 @@ const AddProductForm = ({ token, onClose }) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [tags, setTags] = useState("");
-  const [imgUrl, setImgUrl] = useState("");
+  const [imgUrls, setImgUrls] = useState([]);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  // Function to initialize and open the Cloudinary Upload Widget
+  const openCloudinaryWidget = () => {
+    if (imgUrls.length >= 10) {
+      alert("You can only upload up to 10 images.");
+      return;
+    }
+
+    const widget = window.cloudinary.createUploadWidget(
+      {
+        cloudName: process.env.REACT_APP_CLOUDINARY_NAME,
+        uploadPreset: process.env.REACT_APP_PRESET,
+        multiple: true,
+        showAdvancedOptions: false,
+        cropping: true,
+        croppingAspectRatio: 1,
+        resourceType: "image",
+        maxFileSize: 5000000,
+        maxFiles: 10 - imgUrls.length,
+      },
+      (error, result) => {
+        if (!error && result && result.event === "success") {
+          const uploadedUrls = result.info.secure_url;
+          setImgUrls((prevUrls) => {
+            // Prevent adding more than 10 images
+            const newImgUrls = [...prevUrls, uploadedUrls];
+            if (newImgUrls.length <= 10) {
+              return newImgUrls;
+            } else {
+              alert("You can only upload up to 10 images.");
+              return prevUrls; // Return the previous list if limit exceeded
+            }
+          });
+        }
+      }
+    );
+
+    widget.open(); // Open the widget
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    setLoading(true); // Set loading to true when the submit starts
 
     const newProduct = {
       title,
       description,
       tags: tags.split(",").map((tag) => tag.trim()),
-      imgUrl: imgUrl.split(",").map((url) => url.trim()),
+      imgUrl: imgUrls, // Send array of image URLs to backend
     };
 
     try {
+      // Send new product details to the backend
       await axios.post(
         `${process.env.REACT_APP_BACKEND_URL}/products/create`,
         newProduct,
@@ -44,10 +87,13 @@ const AddProductForm = ({ token, onClose }) => {
       );
       dispatch(setHomeContent(response.data));
 
+      setLoading(false);
+
       onClose();
       navigate("/home");
     } catch (error) {
       console.error("Error adding product:", error);
+      setLoading(false); // Set loading to false in case of error
     }
   };
 
@@ -88,16 +134,27 @@ const AddProductForm = ({ token, onClose }) => {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium">
-              Image URLs (comma-separated)
-            </label>
-            <input
-              type="text"
-              value={imgUrl}
-              onChange={(e) => setImgUrl(e.target.value)}
+            <label className="block text-sm font-medium">Upload Images</label>
+            <button
+              type="button"
+              onClick={openCloudinaryWidget}
               className="border w-full px-3 py-2 rounded"
-              required
-            />
+              disabled={imgUrls.length >= 10} // Disable button when 10 images are uploaded
+            >
+              Choose Images
+            </button>
+            {imgUrls.length > 0 && (
+              <div className="mt-2">
+                {imgUrls.map((url, index) => (
+                  <img
+                    key={index}
+                    src={url}
+                    alt={`Uploaded ${index + 1}`}
+                    className="w-32 h-32 object-cover mr-2"
+                  />
+                ))}
+              </div>
+            )}
           </div>
           <div className="flex justify-end space-x-4">
             <button
@@ -111,7 +168,11 @@ const AddProductForm = ({ token, onClose }) => {
               type="submit"
               className="bg-blue-600 text-white px-4 py-2 rounded"
             >
-              Add Product
+              {loading ? (
+                <div className="w-6 h-6 border-4 border-t-4 border-blue-600 rounded-full animate-spin"></div> // Spinner when loading
+              ) : (
+                "Add Product"
+              )}
             </button>
           </div>
         </form>
